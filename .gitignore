@@ -1,2 +1,31 @@
-node_modules
-**/.DS_Store
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# production
+/build
+
+# Next.js pages
+/.next/
+
+# IDE files
+.DS_Store
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# cache files
+.cache/
+
+# logs
+*.log
+logs
+npm-debug.log*
+
+# local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
