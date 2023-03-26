@@ -28,7 +28,7 @@ export function Drawer() {
           <line x1="4" y1="18" x2="20" y2="18" />
         </svg>
       </button>
-      <DrawerContent isOpen={isOpen} setIsOpen={setIsOpen} />
+      {/* <DrawerContent isOpen={isOpen} setIsOpen={setIsOpen} /> */}
     </>
   );
 }
