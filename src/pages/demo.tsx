@@ -72,13 +72,13 @@ export default function Demo() {
         toggle={true} watt={71}/>
         <DeviceCard title={"Dishwasher"} 
         icon={<LocalLaundryService/>} 
-        toggle={false} watt={0}/>
+        toggle={false} watt={76}/>
         <DeviceCard title={"Kitchen Light"} 
         icon={<Lightbulb/>} 
-        toggle={false} watt={0}/>
+        toggle={false} watt={1}/>
         <DeviceCard title={"Bedroom 1 Light"} 
         icon={<Lightbulb/>} 
-        toggle={false} watt={0}/>
+        toggle={false} watt={2}/>
       </div>
     </div>
   );
