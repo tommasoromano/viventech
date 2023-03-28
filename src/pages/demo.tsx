@@ -15,6 +15,7 @@ import {
 import { Line } from 'react-chartjs-2';
 import { Power, Tv, Lightbulb, Kitchen, LocalLaundryService } from '@mui/icons-material/';
 
+    
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -24,39 +25,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top' as const,
-    },
-    title: {
-      display: true,
-      text: 'Chart.js Line Chart',
-    },
-  },
-};
-
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: labels.map(() => Math.floor(Math.random() * 100) + 1),
-      borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    },
-    {
-      label: 'Dataset 2',
-      data: labels.map(() => Math.floor(Math.random() * 100) + 1),
-      borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
-    },
-  ],
-};
 
 export default function Demo() {
 
@@ -116,6 +84,53 @@ export default function Demo() {
     </div>
   );
 
+  const phoneDevice = () => {
+    const options = {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top' as const,
+        },
+        title: {
+          display: false,
+          text: 'Monthly usage',
+        },
+      },
+    };
+    const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+    const data = {
+      labels,
+      datasets: [
+        {
+          label: 'Spendings €',
+          data: labels.map(() => Math.floor(Math.random() * 100) + 1),
+          borderColor: 'rgb(255, 99, 132)',
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        },
+        {
+          label: 'Wattage w',
+          data: labels.map(() => Math.floor(Math.random() * 100) + 1),
+          borderColor: 'rgb(53, 162, 235)',
+          backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        },
+        {
+          label: 'Savings €',
+          data: labels.map(() => Math.floor(Math.random() * 100) + 1),
+          borderColor: 'rgba(139, 195, 74)',
+          backgroundColor: 'rgba(76, 175, 80)',
+        },
+      ],
+    };
+    return (
+      <div className="container mx-auto min-h-full p-4 mt-12">
+        <h1 className="text-5xl font-bold">Laundry</h1>
+        <p className="py-6">Usage trends by day, week, month, and billing cycle help demystify your electrical bill. What patterns emerge in your home and why? Where is your opportunity save?</p>
+        <h1 className="text-xl font-bold">Monthly usage</h1>
+        <Line options={options} data={data} />
+      </div>
+    );
+  }
+
   const section = (title:JSX.Element,description:string, phoneContent:JSX.Element, bgcolor:string, reverse:boolean) => {
     return (
       <div className={"hero min-h-screen "+bgcolor}>
@@ -143,12 +158,16 @@ export default function Demo() {
     <Header/>
     {/* hero section */}
     {section(
-      (<h1 className="text-5xl font-bold">Whole-devices <span className="text-primary">Energy</span><br/>Monitoring</h1>),
+      (<h1 className="text-5xl font-bold">Whole-home <span className="text-primary">Energy</span><br/>Monitoring</h1>),
       "Machine Learning algorithms find device signatures within your home's power profile and gradually learn about your home as things turn on and off. ",
-      phoneDevices,"bg-base-200",false)}
+      phoneDevices,"bg-base-100",false)}
     {section((<h1 className="text-5xl font-bold">Avoid<br/>Disasters<br/>with <span className="text-primary">Alerts</span></h1>),
       "Think you forgot to turn off the Tv? Set an alert to inform you if it has been on for over 4 hours.",
       phoneAlert,"bg-base-100",true)}
+      {section(
+        (<h1 className="text-5xl font-bold">Cutting-edge<br/>Deep Device<br/><span className="text-primary">Management</span></h1>),
+        "Once detected, devices can be tracked here. Review individual statistics, a device-specific power meter, and manage settings",
+        phoneDevice(),"bg-base-100",false)}
     {/* cards section */}
     <Footer/>
     </>

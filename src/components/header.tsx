@@ -1,7 +1,7 @@
 
 export function Header() {
   return (
-    <div className="navbar bg-base-100 fixed z-10 m-0">
+    <div className="navbar bg-base-100 z-10 m-0">
       <div className="navbar-start">
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-ghost btn-circle">
