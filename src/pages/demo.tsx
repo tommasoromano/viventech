@@ -14,6 +14,8 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { Power, Tv, Lightbulb, Kitchen, LocalLaundryService } from '@mui/icons-material/';
+import ReactEcharts from 'echarts-for-react'; 
+import { useState } from "react";
 
     
 ChartJS.register(
@@ -84,54 +86,109 @@ export default function Demo() {
     </div>
   );
 
-  const phoneDevice = () => {
-    const options = {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'top' as const,
-        },
-        title: {
-          display: false,
-          text: 'Monthly usage',
-        },
+  const phoneWeekly = () => {
+
+    const timeLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const dataLabels = ['Spending €', 'Wattage w', 'Savings €'];
+    const option = {
+      title: {
+        text: ''
       },
+      tooltip: {
+        trigger: 'axis'
+      },
+      legend: {
+        data: dataLabels
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: timeLabels
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: dataLabels.map((label) => ({
+          name: label,
+          type: 'line',
+          stack: 'Total',
+          smooth: true,
+          data: timeLabels.map(() => Math.floor(Math.random() * 1000))
+        }))
     };
-    const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-    const data = {
-      labels,
-      datasets: [
-        {
-          label: 'Spendings €',
-          data: labels.map(() => Math.floor(Math.random() * 100) + 1),
-          borderColor: 'rgb(255, 99, 132)',
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        },
-        {
-          label: 'Wattage w',
-          data: labels.map(() => Math.floor(Math.random() * 100) + 1),
-          borderColor: 'rgb(53, 162, 235)',
-          backgroundColor: 'rgba(53, 162, 235, 0.5)',
-        },
-        {
-          label: 'Savings €',
-          data: labels.map(() => Math.floor(Math.random() * 100) + 1),
-          borderColor: 'rgba(139, 195, 74)',
-          backgroundColor: 'rgba(76, 175, 80)',
-        },
-      ],
-    };
+
+
+
     return (
       <div className="container mx-auto min-h-full p-4 mt-12">
-        <h1 className="text-5xl font-bold">Laundry</h1>
-        <p className="py-6">Usage trends by day, week, month, and billing cycle help demystify your electrical bill. What patterns emerge in your home and why? Where is your opportunity save?</p>
-        <h1 className="text-xl font-bold">Monthly usage</h1>
-        <Line options={options} data={data} />
+        <h1 className="text-5xl font-bold">Your usage</h1>
+        <p className="py-6"></p>
+        <h1 className="text-xl font-bold pb-4">Weekly</h1>
+        <ReactEcharts option={option} />
       </div>
     );
   }
 
+  const phoneDaily = () => {
+
+    const timeLabels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'];
+    const dataLabels = ['Solar', 'Wind', 'Coal'];
+    const option = {
+      title: {
+        text: ''
+      },
+      tooltip: {
+        trigger: 'axis'
+      },
+      legend: {
+        data: dataLabels
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: timeLabels
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: dataLabels.map((label) => ({
+          name: label,
+          type: 'line',
+          stack: 'Total',
+          smooth: true,
+          data: timeLabels.map(() => Math.floor(Math.random() * 1000))
+        }))
+    };
+
+
+
+    return (
+      <div className="container mx-auto min-h-full p-4 mt-12">
+        <h1 className="text-5xl font-bold">Energy Sources</h1>
+        <p className="py-6"></p>
+        <h1 className="text-xl font-bold pb-4">Average Hourly</h1>
+        <ReactEcharts option={option} />
+      </div>
+    );
+  }
+
+  const [activeTab, setActiveTab] = useState(0);
+  const tabs = ['Devices', 'Alerts', 'Spending', 'Sources']
+
   const section = (title:JSX.Element,description:string, phoneContent:JSX.Element, bgcolor:string, reverse:boolean) => {
+
     return (
       <div className={"hero min-h-screen "+bgcolor}>
         <div className={"hero-content flex-col lg:flex-row justify-around pt-20 lg:pt-0"+(reverse ? " lg:flex-row-reverse":"")}>
@@ -140,7 +197,10 @@ export default function Demo() {
             <div>
               {title}
               <p className="py-6">{description}</p>
-              <button className="btn btn-primary">Learn More</button>
+              {/* <button className="btn btn-primary">Learn More</button> */}
+              <ul className="steps">
+                {tabs.map((tab, index) => (<li data-content="●" className={"step"+(activeTab === index ? " step-primary":"")} onClick={() => setActiveTab(index)}>{tab}</li>))}
+              </ul>
             </div>
           </div>
           <div className="container mx-auto max-w-sm px-4">
@@ -153,21 +213,41 @@ export default function Demo() {
     );
   }
 
+  const sections = [
+    section((<h1 className="text-5xl font-bold">Whole-home <span className="text-primary">Energy</span><br/>Monitoring</h1>),
+      "Machine Learning algorithms find device signatures within your home's power profile and gradually learn about your home as things turn on and off. ",
+      phoneDevices,"bg-base-100",false),
+    section((<h1 className="text-5xl font-bold">Avoid<br/>Disasters<br/>with <span className="text-primary">Alerts</span></h1>),
+      "Think you forgot to turn off the Tv? Set an alert to inform you if it has been on for over 4 hours.",
+      phoneAlert,"bg-base-100",false),
+    section((<h1 className="text-5xl font-bold"><span className="text-primary">Save</span> Energy<br/>and Money</h1>),
+      "Understanding how much energy your home is using, when and where, empowers you to find savings. Gives you the tools to break it down and take action.",
+      phoneWeekly(),"bg-base-100",false),
+    section((<h1 className="text-5xl font-bold">Daily<br/><span className="text-primary">Carbon</span><br/>Intensity</h1>),
+      "Once detected, devices can be tracked here. Review individual statistics, a device-specific power meter, and manage settings",
+      phoneDaily(),"bg-base-100",false)
+  ]
+
   return (
     <>
     <Header/>
     {/* hero section */}
-    {section(
+    {/* {section(
       (<h1 className="text-5xl font-bold">Whole-home <span className="text-primary">Energy</span><br/>Monitoring</h1>),
       "Machine Learning algorithms find device signatures within your home's power profile and gradually learn about your home as things turn on and off. ",
       phoneDevices,"bg-base-100",false)}
     {section((<h1 className="text-5xl font-bold">Avoid<br/>Disasters<br/>with <span className="text-primary">Alerts</span></h1>),
       "Think you forgot to turn off the Tv? Set an alert to inform you if it has been on for over 4 hours.",
       phoneAlert,"bg-base-100",true)}
-      {section(
-        (<h1 className="text-5xl font-bold">Cutting-edge<br/>Deep Device<br/><span className="text-primary">Management</span></h1>),
-        "Once detected, devices can be tracked here. Review individual statistics, a device-specific power meter, and manage settings",
-        phoneDevice(),"bg-base-100",false)}
+    {section(
+      (<h1 className="text-5xl font-bold"><span className="text-primary">Save</span> Energy<br/>and Money</h1>),
+      "Understanding how much energy your home is using, when and where, empowers you to find savings. Gives you the tools to break it down and take action.",
+      phoneWeekly(),"bg-base-100",false)}
+    {section(
+      (<h1 className="text-5xl font-bold">Daily<br/><span className="text-primary">Carbon</span><br/>Intensity</h1>),
+      "Once detected, devices can be tracked here. Review individual statistics, a device-specific power meter, and manage settings",
+      phoneDaily(),"bg-base-100",true)} */}
+    {sections[activeTab]}
     {/* cards section */}
     <Footer/>
     </>
