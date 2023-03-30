@@ -6,14 +6,15 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
+  PointElement,
+  LineElement,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
-import { Power, Tv, Lightbulb, Kitchen, LocalLaundryService, BarChart } from '@mui/icons-material/';
+import { Line, Bar } from 'react-chartjs-2';
+import { Power, Tv, Lightbulb, Kitchen, LocalLaundryService, BarChart, KeyboardArrowLeft } from '@mui/icons-material/';
 import ReactEcharts from 'echarts-for-react'; 
 import { useState } from "react";
 import { Toggle } from "@/components/toggle";
@@ -23,11 +24,12 @@ import { Icon } from "@/components/icon";
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  PointElement,
+  LineElement,
 );
 
 export interface CardProps {
@@ -56,13 +58,13 @@ export default function Demo() {
           <div className="flex flex-row justify-between">
             <p>
               <span className="text-md font-bold">Today</span><br/>
-              <span className="text-xs opacity-75">30.7 KWh</span><br/>
-              <span className="text-xs font-bold text-primary">-27%</span> <span className="text-xs opacity-75">-23.5 KWh</span>
+              <span className="text-xs">1.2€</span> <span className="text-xs opacity-75">30.7 KWh</span><br/>
+              <span className="text-xs font-bold text-primary">-27%</span> <span className="text-xs opacity-75">-23.5KWh</span>
             </p>
             <p>
               <span className="text-md font-bold">This Month</span><br/>
-              <span className="text-xs opacity-75">235.37 KWh</span><br/>
-              <span className="text-xs font-bold text-primary">-13%</span> <span className="text-xs opacity-75">-67.7 KWh</span>
+              <span className="text-xs">32.5€</span> <span className="text-xs opacity-75">235.37KWh</span><br/>
+              <span className="text-xs font-bold text-primary">-13%</span> <span className="text-xs opacity-75">-67.7KWh</span>
             </p>
           </div>
           {/* <p>
@@ -103,9 +105,9 @@ export default function Demo() {
             </div>
             <div className="flex flex-row space-x-2 flex-nowrap">
               <button className="btn btn-primary btn-sm">Favourites</button>
-              <button className="btn btn-primary btn-sm">Kitchen</button>
-              <button className="btn btn-primary btn-sm">Living Room</button>
-              <button className="btn btn-primary btn-sm">Bedroom 1</button>
+              <button className="btn btn-success btn-sm">Kitchen</button>
+              <button className="btn btn-success btn-sm">Living Room</button>
+              <button className="btn btn-success btn-sm">Bedroom 1</button>
             </div>
             <div className="grid gap-4 grid-cols-2">
               <DeviceCard
@@ -148,6 +150,126 @@ export default function Demo() {
         </div>
       </div>
     );
+  }
+
+  const phoneConsumption = () => {
+
+    const rand = (min:number, max:number) => Math.floor(Math.random() * (max - min + 1) + min);
+    const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    const dataNames = ['Wattage', 'Savings'];
+    const dataWattage = days.map((label,index)=>index>4?0: rand(20,50));
+    const dataSavings = dataWattage.map((w)=>Math.floor(w/rand(4,10)));
+    const optionsWeekly = {
+      xAxis: {
+        type: 'category',
+        data: days
+      },
+      yAxis: {
+        type: 'value'
+      },
+      grid: {
+        top: 5,
+        bottom: 20,
+        left: 25,
+        right: 0,
+      },
+      series: [
+        {
+          data: dataWattage,
+          type: 'bar',
+          stack: 'one',
+          markLine: {
+            data: [{ type: 'average', name: 'Avg' }],
+            symbol: 'none',
+          }
+        },
+        {
+          data: dataSavings,
+          type: 'bar',
+          stack: 'one',
+        }
+      ]
+    };
+
+    const hours = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24'];
+    // const dataNames = ['Wattage', 'Savings'];
+    const dataWattageHourly = hours.map((label,index)=>index>16?0: rand(20,50));
+    const dataSavingsHourly = dataWattage.map((w)=>Math.floor(w/rand(4,10)));
+    const optionsHourly = {
+      xAxis: {
+        type: 'category',
+        data: hours
+      },
+      yAxis: {
+        type: 'value'
+      },
+      grid: {
+        top: 5,
+        bottom: 20,
+        left: 25,
+        right: 0,
+      },
+      series: [
+        {
+          data: dataWattageHourly,
+          type: 'bar',
+          stack: 'one',
+          markLine: {
+            data: [{ type: 'average', name: 'Avg' }],
+            symbol: 'none',
+          }
+        },
+        {
+          data: dataSavingsHourly,
+          type: 'bar',
+          stack: 'one',
+        }
+      ]
+    };
+
+    return(
+    <div className="container mx-auto min-h-full p-2 mt-12">
+      <div className="flex flex-col space-y-4 m-4">
+        <div className="flex flex-row justify-between">
+          <KeyboardArrowLeft />
+          <h1 className="text-xl font-bold">Consumption</h1>
+          <div></div>
+        </div>
+        <Card 
+        children={(
+          <div className="flex flex-col space-y-2">
+            <h1 className="text-md opacity-75">This week</h1>
+            <div className="flex flex-row justify-between">
+              <h1 className="text-xs">23Kwh</h1>
+              <p className="text-xs opacity-75">-13% from last week</p>
+            </div>
+            <ReactEcharts option={optionsWeekly} 
+            style={{
+              height: '100px',
+            }}
+            />
+            <ReactEcharts option={optionsHourly} 
+            style={{
+              height: '100px',
+            }}
+            />
+            {/* <Bar options={options} data={data} /> */}
+          </div>
+        )} 
+        />
+        <Card
+        children={(
+          <div className="flex flex-col space-y-2">
+            <div className="flex flex-row justify-between">
+            <h1 className="text-md">Clean Energy Usage</h1>
+            <p className="text-md text-primary">+3%</p>
+            </div>
+          </div>
+        )}
+        />
+      </div>
+    </div>
+    )
   }
 
   const phoneDevices = (
@@ -380,9 +502,9 @@ export default function Demo() {
     section((<h1 className="text-5xl font-bold">Whole-home <span className="text-primary">Energy</span><br/>Monitoring</h1>),
       "Machine Learning algorithms find device signatures within your home's power profile and gradually learn about your home as things turn on and off. ",
       phoneHome(),"bg-base-100",false),
-    section((<h1 className="text-5xl font-bold">Whole-home <span className="text-primary">Energy</span><br/>Monitoring</h1>),
+    section((<h1 className="text-5xl font-bold">In-deep<br/><span className="text-primary">Analitycs</span></h1>),
       "Machine Learning algorithms find device signatures within your home's power profile and gradually learn about your home as things turn on and off. ",
-      phoneDevices,"bg-base-100",false),
+      phoneConsumption(),"bg-base-100",true),
     section((<h1 className="text-5xl font-bold">Avoid<br/>Disasters<br/>with <span className="text-primary">Alerts</span></h1>),
       "Think you forgot to turn off the Tv? Set an alert to inform you if it has been on for over 4 hours.",
       phoneAlert,"bg-base-100",true),
@@ -418,7 +540,7 @@ export default function Demo() {
       phoneDaily(),"bg-base-100",true)} */}
     {/* {sections[activeTab]} */}
     {sections[0]}
-    {/* {sections[1]} */}
+    {sections[1]}
     {sections[2]}
     {sections[3]}
     {sections[4]}
