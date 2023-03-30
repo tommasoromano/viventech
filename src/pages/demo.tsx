@@ -13,8 +13,8 @@ import {
   PointElement,
   LineElement,
 } from 'chart.js';
-import { Line, Bar } from 'react-chartjs-2';
-import { Power, Tv, Lightbulb, Kitchen, LocalLaundryService, BarChart, KeyboardArrowLeft } from '@mui/icons-material/';
+import { Line, Bar, Pie } from 'react-chartjs-2';
+import { Power, Tv, Lightbulb, Kitchen, LocalLaundryService, BarChart, KeyboardArrowLeft, CallMade, FilterAlt, FlashOffTwoTone } from '@mui/icons-material/';
 import ReactEcharts from 'echarts-for-react'; 
 import { useState } from "react";
 import { Toggle } from "@/components/toggle";
@@ -114,37 +114,32 @@ export default function Demo() {
                 title={"Fridge"}
                 icon={<Icon path={"/icons/fridge.png"} />}
                 toggle={true}
-                watt={155}
-                seconds={4560}
-                planned={0} alerts={1}          />
+                activeText={"155w"}
+                inactiveText={"0w"}/>
               <DeviceCard
                 title={"TV 1"}
                 icon={<Icon path={"/icons/tv.png"} />}
                 toggle={true}
-                watt={71}
-                seconds={540}
-                planned={2} alerts={2}          />
+                activeText={"71w"}
+                inactiveText={"0w"}/>
               <DeviceCard
                 title={"Laundry"}
                 icon={<Icon path={"/icons/washing-machine.png"} />}
                 toggle={false}
-                watt={76}
-                seconds={340}
-                planned={3} alerts={1}          />
+                activeText={"76w"}
+                inactiveText={"0w"}/>
               <DeviceCard
                 title={"Kitchen Light"}
                 icon={<Icon path={"/icons/led-lamp.png"} />}
                 toggle={false}
-                watt={1}
-                seconds={870}
-                planned={0} alerts={1}          />
+                activeText={"1w"}
+                inactiveText={"0w"}/>
               <DeviceCard
                 title={"Bedroom 1 Light"}
                 icon={<Lightbulb />}
                 toggle={false}
-                watt={2}
-                seconds={980}
-                planned={0} alerts={1}          />
+                activeText={"2w"}
+                inactiveText={"0w"}/>
             </div>
           </div>
         </div>
@@ -227,6 +222,36 @@ export default function Demo() {
       ]
     };
 
+    const optionSource = {
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow'
+    }
+  },
+  grid: {
+    top: 5,
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true
+  },
+  xAxis: {
+    type: 'value',
+    boundaryGap: [0, 0.01]
+  },
+  yAxis: {
+    type: 'category',
+    data: ['Wind', 'Hydro', 'Gas', 'Solar', 'Coal']
+  },
+  series: [
+    {
+      type: 'bar',
+      data: [15, 20, 25, 30, 35]
+    },
+  ]
+};
+
     return(
     <div className="container mx-auto min-h-full p-2 mt-12">
       <div className="flex flex-col space-y-4 m-4">
@@ -261,9 +286,11 @@ export default function Demo() {
         children={(
           <div className="flex flex-col space-y-2">
             <div className="flex flex-row justify-between">
-            <h1 className="text-md">Clean Energy Usage</h1>
-            <p className="text-md text-primary">+3%</p>
+            <h1 className="text-md">Source of Energy</h1>
+            {/* <p className="text-md text-primary">+3%</p> */}
+            <CallMade/>
             </div>
+            <ReactEcharts option={optionSource} style={{height: '150px',}}/>
           </div>
         )}
         />
@@ -272,48 +299,188 @@ export default function Demo() {
     )
   }
 
-  const phoneDevices = (
-    <div className="container mx-auto min-h-full p-4 mt-12">
-      <div className="grid grid-cols-1 gap-4">
-        <h1 className="text-xl text-center font-bold">Your devices:</h1>
-        <DeviceCard
-          title={"Fridge"}
-          icon={<Kitchen />}
-          toggle={true}
-          watt={155}
-          seconds={4560}
-          planned={0} alerts={1}          />
-        <DeviceCard
-          title={"TV 1"}
-          icon={<Tv />}
-          toggle={true}
-          watt={71}
-          seconds={540}
-          planned={2} alerts={2}          />
-        <DeviceCard
-          title={"Dishwasher"}
-          icon={<LocalLaundryService />}
-          toggle={false}
-          watt={76}
-          seconds={340}
-          planned={3} alerts={1}          />
-        <DeviceCard
-          title={"Kitchen Light"}
-          icon={<Lightbulb />}
-          toggle={false}
-          watt={1}
-          seconds={870}
-          planned={0} alerts={1}          />
-        <DeviceCard
-          title={"Bedroom 1 Light"}
-          icon={<Lightbulb />}
-          toggle={false}
-          watt={2}
-          seconds={980}
-          planned={0} alerts={1}          />
+  const phoneSource =() => {
+
+    // this function generate values from Math.sin function adding random fluctuations
+    const rand = (min:number, max:number) => Math.floor(Math.random() * (max - min + 1) + min);
+    const hours = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24'];
+    const dataCoal = hours.map((label,index)=>(Math.cos((index-1)/(hours.length/6))+1)*10+rand(3,7));
+    const dataGas = hours.map((label,index)=>(Math.cos((index-4)/(hours.length/6))+1)*8+rand(2,5));
+    const dataSolar = hours.map((label,index)=>(Math.sin((index-7)/(hours.length/6))+1)*10+rand(3,7));
+    const optionSource = {
+      xAxis: {
+        type: 'category',
+        data: hours
+      },
+      legend: {
+        bottom: 0,
+      },
+      grid: {
+        top: 5,
+        bottom: 60,
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          name: 'Coal',
+          data: dataCoal,
+          type: 'line',
+          smooth: true
+        },
+        {
+          name: 'Solar',
+          data: dataSolar,
+          type: 'line',
+          smooth: true
+        },
+        {
+          name: 'Gas',
+          data: dataGas,
+          type: 'line',
+          smooth: true
+        }
+      ]
+    };
+
+
+    return (
+      <div className="container mx-auto min-h-full p-2 mt-12">
+        <div className="flex flex-col space-y-4 m-4">
+          <div className="flex flex-row justify-between">
+            <KeyboardArrowLeft />
+            <h1 className="text-xl font-bold">Source of Energy</h1>
+            <div></div>
+          </div>
+          <Card
+            children={(
+              <div className="flex flex-col space-y-2">
+                <div className="flex flex-row justify-between">
+                  <h1 className="text-md">Average fluctuations<br/><span className="text-xs opacity-75">Milan, Italy</span></h1>
+                  {/* <p className="text-md text-primary">+3%</p> */}
+                  <FilterAlt />
+                </div>
+                <ReactEcharts option={optionSource} style={{ height: '200px', }} />
+              </div>
+            )}
+          />
+          <Card
+            children={(
+              <div className="flex flex-col space-y-2">
+                <div className="flex flex-row justify-between">
+                  <h1 className="text-md">Schedule your devices</h1>
+                  <CallMade />
+                </div>
+              </div>
+            )}
+          />
+          <Card
+            children={(
+              <div className="flex flex-col space-y-2">
+              <div className="flex flex-row justify-between">
+                <h1 className="text-md">Suggested hour ranges</h1>
+                
+              </div>
+              <div className="flex flex-row justify-between">
+                <h1 className="text-xs">Clean source of energy</h1>
+                <p className="text-md text-primary">10 - 20</p>
+              </div>
+              <div className="flex flex-row justify-between">
+                <h1 className="text-xs">Cheapest energy</h1>
+                <p className="text-md text-primary">11 - 19</p>
+              </div>
+              </div>
+            )}
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  const phoneSchedule = () => {
+    return (
+      <div className="container mx-auto min-h-full p-2 mt-12">
+        <div className="flex flex-col space-y-4 m-4">
+          <div className="flex flex-row justify-between">
+            <KeyboardArrowLeft />
+            <h1 className="text-xl font-bold">Schedule</h1>
+            <div></div>
+          </div>
+          <div>
+            <h1 className="text-xl font-bold">Switch-off periods</h1>
+            <div className="flex flex-row justify-between">
+              <p className="text-xs opacity-75">3 periods</p>
+              <p className="text-xs opacity-75">Show All</p>
+            </div>
+          </div>
+          <div className="grid gap-4 grid-cols-2">
+            <Card children={(
+              <div className="flex flex-col space-y-2">
+              <div className="flex flex-row justify-between">
+                <h1 className="text-md">Night mode<br/><span className="text-xs opacity-75">8 devices</span></h1>
+                <div className="absolute bottom-1 right-1"><Toggle defaultChecked={true} label={""} checked={true} size="toggle-sm" /></div>
+                <CallMade />
+              </div>
+              {/* <div className="flex flex-row space-x-2 flex-nowrap overflow-hidden">
+                <button className="btn btn-primary btn-sm">Heat Pump</button>
+                <button className="btn btn-primary btn-sm">Tv 1</button>
+                <button className="btn btn-primary btn-sm">Tv 2</button>
+                <button className="btn btn-primary btn-sm">Microwave</button>
+              </div> */}
+              </div>
+            )} bg="bg-success" />
+            <Card children={(
+              <div className="flex flex-col space-y-2">
+              <div className="flex flex-row justify-between">
+                <h1 className="text-md">Working hours<br/><span className="text-xs opacity-75">7 devices</span></h1>
+                <div className="absolute bottom-1 right-1"><Toggle defaultChecked={true} label={""} checked={true} size="toggle-sm" /></div>
+                <CallMade />
+              </div>
+              </div>
+            )} bg="bg-success" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold">Sheduled devices</h1>
+            <div className="flex flex-row justify-between">
+              <p className="text-xs opacity-75">9 sheduled</p>
+              <p className="text-xs opacity-75">Show All</p>
+            </div>
+          </div>
+          <div className="grid gap-4 grid-cols-2">
+              <DeviceCard
+                title={"Laundry"}
+                icon={<Icon path={"/icons/washing-machine.png"} />}
+                toggle={true}
+                activeText={"14 - 18"}
+                inactiveText={"no schedule"}
+                />
+              <DeviceCard
+                title={"Boiler"}
+                icon={<Icon path={"/icons/boiler.png"} />}
+                toggle={false}
+                activeText={"18 - 20"}
+                inactiveText={"no schedule"}
+                />
+                <DeviceCard
+                  title={"Conditioner"}
+                  icon={<Icon path={"/icons/air-conditioner.png"} />}
+                  toggle={false}
+                  activeText={"18 - 22"}
+                  inactiveText={"no schedule"}
+                  />
+                  <DeviceCard
+                    title={"Dish Washer"}
+                    icon={<Icon path={"/icons/dishwasher.png"} />}
+                    toggle={true}
+                    activeText={"12 - 14"}
+                    inactiveText={"no schedule"}
+                    />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const phoneAlert = (
     <div className="container mx-auto min-h-full bg-base-200">
@@ -505,6 +672,12 @@ export default function Demo() {
     section((<h1 className="text-5xl font-bold">In-deep<br/><span className="text-primary">Analitycs</span></h1>),
       "Machine Learning algorithms find device signatures within your home's power profile and gradually learn about your home as things turn on and off. ",
       phoneConsumption(),"bg-base-100",true),
+    section((<h1 className="text-5xl font-bold">Choose your<br/><span className="text-primary">Source</span><br/>of Energy</h1>),
+      "The fuel mix within a region fluctuates over the course of the day based on the availability of certain resources, like solar and wind. As the fuel mix changes, so does the Carbon Intensity.",
+      phoneSource(),"bg-base-100",false),
+    section((<h1 className="text-5xl font-bold">Easily<br/><span className="text-primary">Schedule</span><br/>your Devices</h1>),
+      "The fuel mix within a region fluctuates over the course of the day based on the availability of certain resources, like solar and wind. As the fuel mix changes, so does the Carbon Intensity.",
+      phoneSchedule(),"bg-base-100",true),
     section((<h1 className="text-5xl font-bold">Avoid<br/>Disasters<br/>with <span className="text-primary">Alerts</span></h1>),
       "Think you forgot to turn off the Tv? Set an alert to inform you if it has been on for over 4 hours.",
       phoneAlert,"bg-base-100",true),
@@ -543,7 +716,9 @@ export default function Demo() {
     {sections[1]}
     {sections[2]}
     {sections[3]}
-    {sections[4]}
+    {/* {sections[2]}
+    {sections[3]}
+    {sections[4]} */}
     {/* cards section */}
     <Footer/>
     </>
