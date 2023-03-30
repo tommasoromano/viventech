@@ -1,7 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Toggle } from "./toggle";
-import {KeyboardArrowRight} from '@mui/icons-material/';
+import {KeyboardArrowRight,Settings,CallMade} from '@mui/icons-material/';
 import { useState } from "react";
+import { Card } from "@/pages/demo";
 
 export interface DeviceCardProps {
   title: string;
@@ -29,7 +30,7 @@ export function DeviceCard({title, icon, toggle, watt, seconds, planned, alerts}
 
   const [isToggle, setIsToggle] = useState(toggle);
 
-  return (
+  const style1 = () => (
     <div className={"card shadow-xl "+(isToggle ? "bg-success" : "")}>
       <div className={"card-body flex flex-row justify-between"}>
         {/* <div className="w-10 rounded-full text-center text-primary text-xl">
@@ -62,4 +63,34 @@ export function DeviceCard({title, icon, toggle, watt, seconds, planned, alerts}
       </div>
     </div>
   );
+
+  const style2 = () => (
+    <Card
+      children={(
+        <div className="grid gap-4 grid-cols-2">
+          <div className="">{icon}</div>
+          <div className="absolute top-2 right-2">
+            {/* <button className="btn btn-circle btn-ghost"> */}
+              <CallMade/>
+          </div>
+          <div></div>
+          <p>
+            <span className="text-sm font-bold">{title}</span><br/>
+            <span className="italic opacity-75 text-xs">{isToggle ? watt.toString() : "0"}w</span>
+          </p>
+          <div className="absolute bottom-1 right-1">
+            <Toggle 
+            defaultChecked={false} 
+            label={""} 
+            checked={isToggle}
+            onChange={()=>{setIsToggle(!isToggle)}}
+            />
+          </div>
+        </div>
+      )}
+      bg={isToggle ? "bg-success" : "bg-base-200"}
+    />
+  );
+
+  return style2();
 }
