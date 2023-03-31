@@ -670,17 +670,17 @@ export default function Demo() {
       "Machine Learning algorithms find device signatures within your home's power profile and gradually learn about your home as things turn on and off. ",
       phoneHome(),"bg-base-100",false),
     section((<h1 className="text-5xl font-bold">In-deep<br/><span className="text-primary">Analitycs</span></h1>),
-      "Machine Learning algorithms find device signatures within your home's power profile and gradually learn about your home as things turn on and off. ",
+      "Understanding how much energy your home is using, when and where, empowers you to find savings. Gives you the tools to break it down and take action.",
       phoneConsumption(),"bg-base-100",true),
     section((<h1 className="text-5xl font-bold">Choose your<br/><span className="text-primary">Source</span><br/>of Energy</h1>),
       "The fuel mix within a region fluctuates over the course of the day based on the availability of certain resources, like solar and wind. As the fuel mix changes, so does the Carbon Intensity.",
       phoneSource(),"bg-base-100",false),
     section((<h1 className="text-5xl font-bold">Easily<br/><span className="text-primary">Schedule</span><br/>your Devices</h1>),
-      "The fuel mix within a region fluctuates over the course of the day based on the availability of certain resources, like solar and wind. As the fuel mix changes, so does the Carbon Intensity.",
+      "Schedule your devices to turn on and off automatically. Set a schedule for your devices when you are at work, sleep at night or go to a trip.",
       phoneSchedule(),"bg-base-100",true),
     section((<h1 className="text-5xl font-bold">Avoid<br/>Disasters<br/>with <span className="text-primary">Alerts</span></h1>),
       "Think you forgot to turn off the Tv? Set an alert to inform you if it has been on for over 4 hours.",
-      phoneAlert,"bg-base-100",true),
+      phoneAlert,"bg-base-100",false),
     section((<h1 className="text-5xl font-bold"><span className="text-primary">Save</span> Energy<br/>and Money</h1>),
       "Understanding how much energy your home is using, when and where, empowers you to find savings. Gives you the tools to break it down and take action.",
       phoneWeekly(),"bg-base-100",false),
@@ -716,6 +716,7 @@ export default function Demo() {
     {sections[1]}
     {sections[2]}
     {sections[3]}
+    {sections[4]}
     {/* {sections[2]}
     {sections[3]}
     {sections[4]} */}
